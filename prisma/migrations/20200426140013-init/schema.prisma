@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource mysql {
+  provider = "mysql"
+  url = "***"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Log {
+  id String @id @default(cuid())
+  createdAt DateTime @default(now())
+  user String
+  content String
+  app App @relation(fields: [appId], references: [id])
+  appId String
+
+  // @@index([appId], name: "appId")
+}
+
+model Monitor {
+  id String @id @default(cuid())
+  event String
+  eventUser String
+  eventParam String
+  eventTime DateTime
+  createdAt DateTime @default(now())
+  app App @relation(fields: [appId], references: [id])
+  appId String
+
+  // @@index([appId], name: "appId")
+}
+
+model App {
+  id String @id @default(cuid())
+  name String
+  describe String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Log Log[]
+  Monitor Monitor[]
+}
