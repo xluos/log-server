@@ -21,7 +21,7 @@ export class MonitorController {
     // console.log(eventParam)
     await this.monitorService.emit({
       event: body.event,
-      eventUser: body.user || '',
+      eventUser: body.user || body.eventUser || '',
       eventTime: body.eventTime || new Date(),
       eventParam,
       appId: param.appId
