@@ -18,6 +18,7 @@ export class MonitorController {
     if (body.eventParam) {
       eventParam = JSON.stringify(body.eventParam)
     }
+    // console.log(eventParam)
     await this.monitorService.emit({
       event: body.event,
       eventUser: body.user || '',
@@ -29,8 +30,9 @@ export class MonitorController {
   }
   
   @Get('list/:appId')
-  async getAppList() {
-    const monitorlist = await this.monitorService.getListAll()
+  async getAppList(@Param() param) {
+    console.log(param)
+    const monitorlist = await this.monitorService.getListAll(param.appId)
     return ResponseData.success(monitorlist)
   }
 

@@ -25,7 +25,11 @@ export class MonitorService {
     })
   }
 
-  getListAll () {
-    return prisma.monitor.findMany()
+  getListAll (appId: string) {
+    return prisma.monitor.findMany({
+      where: {
+        appId
+      }
+    })
   }
 }
