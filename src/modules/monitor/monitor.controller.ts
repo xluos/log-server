@@ -1,5 +1,5 @@
 import { ResponseData } from '../../utils/Response';
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query, Response } from '@nestjs/common';
 import { MonitorService } from './monitor.service';
 
 @Controller('monitor')
@@ -28,7 +28,29 @@ export class MonitorController {
     })
     return ResponseData.success({})
   }
-  
+
+  @Get('emit/normal/:appId')
+  async createNormalApp(@Response() res, @Query() query, @Param() param) {
+    console.log(param, query)
+    if (!query.event) {
+      return ResponseData.error(-1, 'event 不能为空')
+    }
+    if (!param.appId) {
+      return ResponseData.error(-1, 'appid 不能为空')
+    }
+    const event = query.event
+    delete query.event
+    const eventParam = JSON.stringify(query)
+    await this.monitorService.emit({
+      event,
+      eventUser: query.user || query.eventUser || '',
+      eventTime: query.eventTime || new Date(),
+      eventParam,
+      appId: param.appId
+    }).catch(console.error)
+    return res.status(204).send()
+  }
+
   @Get('list/:appId')
   async getAppList(@Param() param) {
     console.log(param)
